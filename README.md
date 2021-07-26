@@ -1,1 +1,1 @@
-# Codecademy-Data-Scientist-Analyst-Professional-Certificate
+# Codecademy-Data-Scientist-&-Data-Analyst-Professional-Certificate
