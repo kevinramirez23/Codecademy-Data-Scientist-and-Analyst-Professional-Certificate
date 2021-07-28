@@ -22,8 +22,9 @@ deaths = [90,4000,16,3103,179,184,408,682,5,1023,43,319,688,259,37,11,2068,269,3
 # write your update damages function here:
 def convert_damages_data(damages):
   conversion = {"M": 1000000, "B": 1000000000}
+  # list.
   updated_damages = []
-
+  # loop iterates through the "damages" list and converts each value to a float.
   for damage in damages:
     if damage == "Damages not recorded":
       updated_damages.append(damage)
@@ -32,15 +33,18 @@ def convert_damages_data(damages):
     if damage[-1] == 'B':
       updated_damages.append(float(damage.strip('B'))*conversion["B"])
   return updated_damages
-
+# function call stored in a variable.
 updated_damages = convert_damages_data(damages)
 print(updated_damages)
 
 
 # write your construct hurricane dictionary function here:
 def create_dictionary(names, months, years, max_sustained_winds, areas_affected, deaths):
+  # dictionary.
   hurricane_dictionary = {}
+  # the number of values in the "names" list stored in a variable.
   num_hurricanes = len(names)
+  # this loop iterates through each list and creates a dictionary for each dictionary in the below format.
   for hurricane in range(num_hurricanes):
     hurricane_dictionary[names[hurricane]] = {"Name": names[hurricane],
                                              "Month": months[hurricane],
@@ -50,15 +54,18 @@ def create_dictionary(names, months, years, max_sustained_winds, areas_affected,
                                              "Damage": updated_damages[hurricane],
                                              "Deaths": deaths[hurricane]}
   return hurricane_dictionary
-
+# function call stored in a variable.
 hurricane_dictionary = create_dictionary(names, months, years, max_sustained_winds, areas_affected, deaths)
 print(hurricane_dictionary)
 
 
 # write your construct hurricane by year dictionary function here:
 def create_dictionary_by_year(names, months, years, max_sustained_winds, areas_affected, deaths):
+  # dictionary.
   year_dictionary = {}
+  # variable that store the number of data values in the "years" dictionary.
   year_hurricanes = len(years)
+  # this loop iterates through each list and creates a dictionary for each dictionary in the below format.
   for hurricane in range(year_hurricanes):
     year_dictionary[years[hurricane]] = {"Name": names[hurricane],
                                              "Month": months[hurricane],
@@ -67,67 +74,129 @@ def create_dictionary_by_year(names, months, years, max_sustained_winds, areas_a
                                              "Areas Affected": areas_affected[hurricane],
                                              "Damage": updated_damages[hurricane],
                                              "Deaths": deaths[hurricane]}
-   return year_dictionary
-
+  return year_dictionary
+# function call stored in a variable.
 hurricane_year_dictionary = create_dictionary_by_year(names, months, years, max_sustained_winds, areas_affected, deaths)
 print(hurricane_year_dictionary)
   
 
 # write your count affected areas function here:
-def probability_affected_areas(areas_affected):
-  occurances_affected_areas = {}
-  affected_areas = 
-  counter = 1
-  for hurricane in hurricane_dictionary:
-    for affected_area in hurricane:
-      occurances_affected_areas.append(areas_affected.count())
-        counter += 1
-     return  occurances_affected_areas
-  
 def probability_affected_areas(hurricane_dictionary):
-  new_dict = {}
+  # dictionary.
+  affected_area_dictionary = {}
+  # this loop iterates through the hurricane dictionary and then through each affected area.
   for hurricane in hurricane_dictionary:
-    for area in hurricane_dictionary[hurricane]["Area Affected"]:
-      if area in new_dict:
+    for area in hurricane_dictionary[hurricane]["Areas Affected"]:
+      # this control flow counts the number of times an area is affected.
+      if area in affected_area_dictionary:
         count = count + 1
-        new_dict[area] = count
+        affected_area_dictionary[area] = count
       else: 
         count = 1
-        new_dict[area] = count
-  return new_dict     
-print(probability_affected_areas(hurricane_dictionary))
+        affected_area_dictionary[area] = count
+  return affected_area_dictionary
+# function call stored within a variable. 
+affected_area_dictionary = probability_affected_areas(hurricane_dictionary)
+print(affected_area_dictionary)
   
       
 # write your find most affected area function here:
-
-
-
-
-
-
+def area_most_affected(affected_area_dictionary):
+  max_area = 'Central America'
+  max_area_count = 0
+  # iterates through each area within the dictionary to find which area is most affected and returns that key with its value.
+  for area in affected_area_dictionary:
+    if affected_area_dictionary[area] > max_area_count:
+      max_area = area
+      max_area_count = affected_area_dictionary[area]
+  return max_area, max_area_count
+# function call stored within a variable.
+max_area, max_area_count = area_most_affected(affected_area_dictionary)
+print(max_area, max_area_count)
 
 # write your greatest number of deaths function here:
+def hurricane_mortality(hurricane_dictionary):
+  max_mortality_cane = 'Cuba I'
+  max_mortality = 0
 
+  for typhoon in hurricane_dictionary:
+    if hurricane_dictionary[typhoon]['Deaths'] > max_mortality:
+      max_mortality_cane = typhoon
+      max_mortality = hurricane_dictionary[typhoon]['Deaths']
+  return max_mortality_cane, max_mortality
 
-
-
-
+max_mortality_cane, max_mortality = hurricane_mortality(hurricane_dictionary)
+print(max_mortality_cane, max_mortality)
 
 
 # write your catgeorize by mortality function here:
+def categorize_mortality(hurricane_dictionary):
+  mortality_scale = {0: 0,
+                    1: 100,
+                    2: 500,
+                    3: 1000,
+                    4: 10000}
+  hurricanes_by_mortality = {0:[],1:[],2:[],3:[],4:[],5:[]}
+  for typhoon in hurricane_dictionary:
+    num_deaths = hurricane_dictionary[typhoon]['Deaths']
+    if num_deaths == mortality_scale[0]:
+      hurricanes_by_mortality[0].append(hurricane_dictionary[typhoon])
+    elif num_deaths > mortality_scale[0] and num_deaths <= mortality_scale[1]:
+      hurricanes_by_mortality[1].append(hurricane_dictionary[typhoon])
+    elif num_deaths > mortality_scale[1] and num_deaths <= mortality_scale[2]:
+      hurricanes_by_mortality[2].append(hurricane_dictionary[typhoon])
+    elif num_deaths > mortality_scale[2] and num_deaths <= mortality_scale[3]:
+      hurricanes_by_mortality[3].append(hurricane_dictionary[typhoon])
+    elif num_deaths > mortality_scale[3] and num_deaths <= mortality_scale[4]:
+      hurricanes_by_mortality[4].append(hurricane_dictionary[typhoon])
+    elif num_deaths > mortality_scale[4]:
+      hurricanes_by_mortality[5].append(hurricane_dictionary[typhoon])
+  return hurricanes_by_mortality
 
-
-
-
-
+hurricanes_by_mortality = categorize_mortality(hurricane_dictionary)
+print(hurricanes_by_mortality)
 
 
 # write your greatest damage function here:
+def greatest_damage(hurricane_dictionary):
+  max_damage_cane = 'Cuba I'
+  max_damage = 0
 
+  for typhoon in hurricane_dictionary:
+    if hurricane_dictionary[typhoon]['Damage'] == 'damage not recorded':
+      pass
+    elif hurricane_dictionary[typhoon]['Damage'] > max_damage:
+      max_damage_cane = typhoon
+      max_damage = hurricane_dictionary[typhoon]['Damage']
+  return max_damage_cane, max_damage
 
-
-
-
+max_damage_cane, max_damage = greatest_damage(hurricane_dictionary)
+print(max_damage_cane, max_damage)
 
 
 # write your catgeorize by damage function here:
+def categorize_damage(hurricane_dictionary):
+  damage_scale = {0: 0,
+                  1: 100000000,
+                  2: 1000000000,
+                  3: 10000000000,
+                  4: 50000000000}
+  hurricanes_by_damages = {0:[],1:[],2:[],3:[],4:[],5:[]}
+  for typhoon in hurricane_dictionary:
+    num_damages = hurricane_dictionary[typhoon]['Damages']
+    if num_damages == damage_scale[0]:
+      hurricanes_by_damages[0].append(hurricane_dictionary[typhoon])
+    elif num_damages > damage_scale[0] and num_damages <= damage_scale[1]:
+      hurricanes_by_damages[1].append(hurricane_dictionary[typhoon])
+    elif num_damages > damage_scale[1] and num_damages <= damage_scale[2]:
+      hurricanes_by_damages[2].append(hurricane_dictionary[typhoon])
+    elif num_damages > damage_scale[2] and num_damages <= damage_scale[3]:
+      hurricanes_by_damages[3].append(hurricane_dictionary[typhoon])
+    elif num_damages > damage_scale[3] and num_damages <= damage_scale[4]:
+      hurricanes_by_damages[4].append(hurricane_dictionary[typhoon])
+    elif num_damages > damage_scale[4]:
+      hurricanes_by_damages[5].append(hurricane_dictionary[typhoon])
+  return hurricanes_by_damages
+
+hurricanes_by_damages = categorize_damage(hurricane_dictionary)
+print(hurricanes_by_damages)
